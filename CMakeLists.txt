@@ -26,11 +26,11 @@ find_package(
 #   Action2.action
 # )
 
-generate_messages(
-  DEPENDENCIES
-    std_srvs
+#generate_messages(
+#  DEPENDENCIES
+#    std_srvs
 #    actionlib_msgs
-)
+#)
 
 catkin_package(
   INCLUDE_DIRS
