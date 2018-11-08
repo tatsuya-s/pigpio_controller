@@ -57,5 +57,5 @@ include_directories(
 )
 
 add_executable(suction_controller_node src/suction_controller_node.cpp)
-add_dependencies(suction_controller_node wiringPi ${catkin_EXPORTED_TARGETS})
-target_link_libraries(suction_controller_node ${catkin_LIBRARIES})
+add_dependencies(suction_controller_node ${catkin_EXPORTED_TARGETS} wiringPi)
+target_link_libraries(suction_controller_node ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
