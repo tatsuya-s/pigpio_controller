@@ -12,6 +12,11 @@ find_package(
 #    actionlib_msgs
 )
 
+find_library(
+  WIRINGPI_LIBRARY wiringPi 
+    /home/pi/libraries/wiringPi
+)
+
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
