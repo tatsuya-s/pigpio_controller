@@ -8,8 +8,8 @@ find_package(
     roscpp
     rospy
     std_srvs
-    message_generation
-    actionlib_msgs
+#    message_generation
+#    actionlib_msgs
 )
 
 ## Generate services in the 'srv' folder
@@ -28,9 +28,8 @@ find_package(
 
 generate_messages(
   DEPENDENCIES
-    geometry_msgs
     std_srvs
-    actionlib_msgs
+#    actionlib_msgs
 )
 
 catkin_package(
@@ -42,8 +41,8 @@ catkin_package(
     roscpp
     rospy
     std_srvs
-    message_runtime
-    actionlib_msgs
+#    message_runtime
+#    actionlib_msgs
 #  DEPENDS system_lib
 )
 

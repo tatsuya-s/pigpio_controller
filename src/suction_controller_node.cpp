@@ -18,13 +18,13 @@ bool SuctionController::setAirPort(std_srvs::SetBool::Request &req,
     try 
     {
         digitalWrite(this->gpio_pin, static_cast<int>(req.data));
-        response.success = true;
+        res.success = true;
     }
     catch(...)
     {
         ROS_ERROR("Couldn't set port");
         ros::Duration(1.0).sleep();
-        response.success = false;
+        res.success = false;
     }
 
     ROS_INFO_STREAM("Air port request : " << req.data ? "true" : "false");
