@@ -6,6 +6,14 @@ SuctionController::SuctionController() :
 {
     this->set_port_srv = this->nh.advertiseService("control_suction", &SuctionController::setAirPort, this);
     this->private_nh.getParam("gpio_pin", this->gpio_pin);
+
+    if (wiringPiSetup() == -1)
+    {
+        ROS_ERROR("GPIO error");
+        ros::shutdown();
+    }
+
+    pinMode(this->gpio_pin, OUTPUT);
 }
 
 SuctionController::~SuctionController() 
@@ -36,14 +44,6 @@ bool SuctionController::setAirPort(std_srvs::SetBool::Request &req,
 int main(int argc, char **argv) 
 {
     ros::init(argc, argv, "suction_controller_node");
-
-    if (wiringPiSetup() == -1)
-    {
-        ROS_ERROR("GPIO error");
-        ros::shutdown();
-    }
-
-    pinMode(this->gpio_pin, OUTPUT);
 
     SuctionController my_controller;
 
