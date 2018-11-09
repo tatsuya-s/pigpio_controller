@@ -1,21 +1,26 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import pigpio
 import rospy
 from std_srvs.srv import SetBool
 
-pi = pigpio.pi()
+class Controller():
+    def __init__(self):
+        self.pin = 17
+        self.pi = pigpio.pi()
+        self.pi.set_mode(self.pin, pigpio.OUTPUT)
 
-def SetPort(req):
-    print "%s"%req.data
-    pi.write(17,req.data)
-    return [True, "suction"]
+        rospy.Service('control_suction', SetBool, self.callback)
+
+    def callback(self, req):
+        self.pi.write(self.pin, req.data)
+        return [True, "%s"%req.data]
 
 def main():
     rospy.init_node('suction_controller', anonymous = False)
-    pi.set_mode(17, pigpio.OUTPUT)
-    rospy.Service('control_suction', SetBool, SetPort)
+    suction_controller = Controller()
+
     rospy.spin()
 
 if __name__ == '__main__':
