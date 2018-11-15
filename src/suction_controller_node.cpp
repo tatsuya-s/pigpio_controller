@@ -2,18 +2,25 @@
 
 SuctionController::SuctionController() :
     private_nh("~"), 
-    gpio_pin(0)
+    gpio_pin(17), 
+    rasp_addr(""), 
+    rasp_port("")
 {
     this->set_port_srv = this->nh.advertiseService("control_suction", &SuctionController::setAirPort, this);
     this->private_nh.getParam("gpio_pin", this->gpio_pin);
 
-    if (wiringPiSetup() == -1)
+    char* char_addr = this->rasp_addr.length() > 0 ? const_cast<char*>(this->rasp_addr.c_str()) : NULL;
+    char* char_port = this->rasp_port.length() > 0 ? const_cast<char*>(this->rasp_port.c_str()) : NULL;
+    ROS_INFO("IP address: %s, Port: %s\n", char_addr, char_port);
+    this->pi = pigpio_start(char_addr, char_port);
+
+    if (this->pi < 0)
     {
         ROS_ERROR("GPIO error");
         ros::shutdown();
     }
 
-    pinMode(this->gpio_pin, OUTPUT);
+    set_mode(this->pi, this->gpio_pin, PI_OUTPUT);
 }
 
 SuctionController::~SuctionController() 
@@ -25,7 +32,7 @@ bool SuctionController::setAirPort(std_srvs::SetBool::Request &req,
 {
     try 
     {
-        digitalWrite(this->gpio_pin, static_cast<int>(req.data));
+        gpio_write(this->pi, this->gpio_pin, static_cast<int>(req.data));
         res.success = true;
     }
     catch(...)
@@ -39,6 +46,12 @@ bool SuctionController::setAirPort(std_srvs::SetBool::Request &req,
     ROS_INFO_STREAM("Air port response: " << res.success ? "true" : "false");
 
     return true;
+}
+
+void SuctionController::clear()
+{
+    set_mode(this->pi, this->gpio_pin, PI_INPUT);
+    pigpio_stop(this->pi);
 }
 
 int main(int argc, char **argv) 
