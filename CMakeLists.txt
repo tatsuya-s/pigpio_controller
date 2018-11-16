@@ -37,4 +37,3 @@ include_directories(
 
 add_executable(suction_controller_node src/suction_controller_node.cpp)
 target_link_libraries(suction_controller_node ${catkin_LIBRARIES} ${pigpiod_if2_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
-add_dependencies(suction_controller_node pump_controller_generate_messages_cpp)
