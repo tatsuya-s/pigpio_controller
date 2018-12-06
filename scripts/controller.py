@@ -11,15 +11,15 @@ class Controller():
         self.pi = pigpio.pi()
         self.pi.set_mode(self.pin, pigpio.OUTPUT)
 
-        rospy.Service('control_suction', SetBool, self.callback)
+        rospy.Service('control_pin', SetBool, self.callback)
 
     def callback(self, req):
         self.pi.write(self.pin, req.data)
         return [True, "%s"%req.data]
 
 def main():
-    rospy.init_node('suction_controller', anonymous = False)
-    suction_controller = Controller()
+    rospy.init_node('pigpio_controller', anonymous = False)
+    pigpio_controller = Controller()
 
     rospy.spin()
 

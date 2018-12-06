@@ -1,12 +1,12 @@
-#include "suction_controller_node.hpp"
+#include "pigpio_controller_node.hpp"
 
-SuctionController::SuctionController() :
+GPIOController::GPIOController() :
     private_nh("~"), 
-    gpio_pin(17), 
+    gpio_pin(26), 
     rasp_addr(""), 
     rasp_port("")
 {
-    this->set_port_srv = this->nh.advertiseService("control_suction", &SuctionController::setAirPort, this);
+    this->set_pin_srv = this->nh.advertiseService("control_pin", &GPIOController::setPin, this);
     this->private_nh.getParam("gpio_pin", this->gpio_pin);
 
     char* char_addr = this->rasp_addr.length() > 0 ? const_cast<char*>(this->rasp_addr.c_str()) : NULL;
@@ -23,12 +23,12 @@ SuctionController::SuctionController() :
     set_mode(this->pi, this->gpio_pin, PI_OUTPUT);
 }
 
-SuctionController::~SuctionController() 
+GPIOController::~GPIOController() 
 {
 }
 
-bool SuctionController::setAirPort(std_srvs::SetBool::Request &req, 
-                                   std_srvs::SetBool::Response &res)
+bool GPIOController::setPin(std_srvs::SetBool::Request &req, 
+                            std_srvs::SetBool::Response &res)
 {
     try 
     {
@@ -37,18 +37,18 @@ bool SuctionController::setAirPort(std_srvs::SetBool::Request &req,
     }
     catch(...)
     {
-        ROS_ERROR("Couldn't set port");
+        ROS_ERROR("Couldn't set pin");
         ros::Duration(1.0).sleep();
         res.success = false;
     }
 
-    ROS_INFO_STREAM("Air port request : " << req.data ? "true" : "false");
-    ROS_INFO_STREAM("Air port response: " << res.success ? "true" : "false");
+    ROS_INFO_STREAM("Pin request : " << req.data ? "true" : "false");
+    ROS_INFO_STREAM("Pin response: " << res.success ? "true" : "false");
 
     return true;
 }
 
-void SuctionController::clear()
+void GPIOController::clear()
 {
     set_mode(this->pi, this->gpio_pin, PI_INPUT);
     pigpio_stop(this->pi);
@@ -56,11 +56,13 @@ void SuctionController::clear()
 
 int main(int argc, char **argv) 
 {
-    ros::init(argc, argv, "suction_controller_node");
+    ros::init(argc, argv, "pigpio_controller_node");
 
-    SuctionController my_controller;
+    GPIOController my_controller;
 
     ros::spin();
+
+    my_controller.clear();
 
     return 0;
 }

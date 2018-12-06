@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(suction_controller)
+project(pigpio_controller)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
@@ -24,7 +24,7 @@ catkin_package(
   INCLUDE_DIRS
     include
   LIBRARIES
-    suction_controller
+    pigpio_controller
   CATKIN_DEPENDS
     roscpp
     rospy
@@ -37,5 +37,5 @@ include_directories(
   ${pigpio_INCLUDE_DIR}
 )
 
-add_executable(suction_controller_node src/suction_controller_node.cpp)
-target_link_libraries(suction_controller_node ${catkin_LIBRARIES} ${pigpiod_if2_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
+add_executable(pigpio_controller_node src/pigpio_controller_node.cpp)
+target_link_libraries(pigpio_controller_node ${catkin_LIBRARIES} ${pigpiod_if2_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
