@@ -5,12 +5,12 @@
 #include <std_srvs/SetBool.h>
 #include "pigpiod_if2.h"
 
-class GPIOController 
+class GPIOController
 {
     public:
         GPIOController();
         ~GPIOController();
-        bool setPin(std_srvs::SetBool::Request &req, 
+        bool setPin(std_srvs::SetBool::Request &req,
                     std_srvs::SetBool::Response &res);
         void clear();
 

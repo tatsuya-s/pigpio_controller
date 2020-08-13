@@ -1,13 +1,15 @@
 #include "pigpio_controller_node.hpp"
 
 GPIOController::GPIOController() :
-    private_nh("~"), 
-    gpio_pin(26), 
-    rasp_addr(""), 
-    rasp_port("")
+    private_nh("~"),
+    gpio_pin(26),
+    rasp_addr(""),
+    rasp_port("8888")
 {
     this->set_pin_srv = this->nh.advertiseService("control_pin", &GPIOController::setPin, this);
     this->private_nh.getParam("gpio_pin", this->gpio_pin);
+    this->private_nh.getParam("rasp_addr", this->rasp_addr);
+    this->private_nh.getParam("rasp_port", this->rasp_port);
 
     char* char_addr = this->rasp_addr.length() > 0 ? const_cast<char*>(this->rasp_addr.c_str()) : NULL;
     char* char_port = this->rasp_port.length() > 0 ? const_cast<char*>(this->rasp_port.c_str()) : NULL;
@@ -23,14 +25,14 @@ GPIOController::GPIOController() :
     set_mode(this->pi, this->gpio_pin, PI_OUTPUT);
 }
 
-GPIOController::~GPIOController() 
+GPIOController::~GPIOController()
 {
 }
 
-bool GPIOController::setPin(std_srvs::SetBool::Request &req, 
+bool GPIOController::setPin(std_srvs::SetBool::Request &req,
                             std_srvs::SetBool::Response &res)
 {
-    try 
+    try
     {
         gpio_write(this->pi, this->gpio_pin, static_cast<int>(req.data));
         res.success = true;
@@ -54,7 +56,7 @@ void GPIOController::clear()
     pigpio_stop(this->pi);
 }
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
     ros::init(argc, argv, "pigpio_controller_node");
 
